@@ -1,0 +1,85 @@
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes stampIn {
+  0% {
+    transform: rotate(-8deg) scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: rotate(-8deg) scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-8deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gridPulse {
+  0%, 100% {
+    opacity: 0.14;
+  }
+  50% {
+    opacity: 0.24;
+  }
+}
+
+@keyframes meshDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-2%, 2%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(2%, -1%, 0) scale(1.02);
+  }
+}
+
+@keyframes scanSweep {
+  0% { background-position: 0 -240px; }
+  100% { background-position: 0 100vh; }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmerBorder {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.94) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes dotPulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--verdict-approved-soft);
+  }
+  50% {
+    box-shadow: 0 0 0 5px var(--verdict-approved-soft);
+  }
+}
+
+body::before {
+  animation: gridPulse 6s ease-in-out infinite;
+}

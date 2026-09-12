@@ -1,0 +1,10 @@
+{
+  "name": "patchcourt-judge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Runs inside GitHub Actions to test a submitted patch, get a GenLayer verdict when needed, and write the result to Firestore.",
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "genlayer-js": "^0.7.0"
+  }
+}

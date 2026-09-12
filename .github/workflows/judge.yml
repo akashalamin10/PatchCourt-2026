@@ -1,0 +1,43 @@
+name: PatchCourt Judge
+
+# Triggered by the Cloudflare Worker (see /free-pipeline/cloudflare-worker.js)
+# right after a worker submits a patch. Everything runs on GitHub Actions'
+# free minutes + GenLayer's own AI validators — no Firebase Blaze plan needed.
+on:
+  repository_dispatch:
+    types: [patch-submitted]
+
+jobs:
+  judge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout judge script
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            free-pipeline/judge
+          sparse-checkout-cone-mode: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install judge dependencies
+        working-directory: free-pipeline/judge
+        run: npm install --no-audit --no-fund
+
+      - name: Fetch diff, ask GenLayer to judge, write result to Firestore
+        working-directory: free-pipeline/judge
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GENLAYER_NETWORK: testnet
+          GENLAYER_RPC_URL: ${{ secrets.GENLAYER_RPC_URL }}
+          GENLAYER_CONTRACT_ADDRESS: ${{ secrets.GENLAYER_CONTRACT_ADDRESS }}
+          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BOUNTY_ID: ${{ github.event.client_payload.bountyId }}
+          SUBMISSION_ID: ${{ github.event.client_payload.submissionId }}
+          WORKER_ID: ${{ github.event.client_payload.workerId }}
+          BRANCH_LINK: ${{ github.event.client_payload.branchLink }}
+          EXPLANATION: ${{ github.event.client_payload.explanation }}
+        run: node judge.js

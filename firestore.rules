@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    match /bounties/{bountyId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.buyerId
+        && request.resource.data.status == "open";
+      allow update: if request.auth != null && (
+        request.auth.uid == resource.data.buyerId ||
+        request.auth.uid == request.resource.data.claimedBy ||
+        request.auth.uid == resource.data.claimedBy
+      );
+      allow delete: if request.auth != null && request.auth.uid == resource.data.buyerId;
+    }
+
+    match /submissions/{submissionId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.workerId;
+      // Manual verdict path for Firebase's free Spark plan, where Cloud
+      // Functions (and the automated GenLayer judging pipeline) cannot be
+      // deployed. Only the buyer who owns the related bounty may set a
+      // verdict, and only the verdict/testResult fields — everything else
+      // about the submission must stay unchanged.
+      allow update: if request.auth != null
+        && request.auth.uid == get(/databases/$(database)/documents/bounties/$(resource.data.bountyId)).data.buyerId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["verdict", "testResult", "genlayerVerdict", "genlayerTxHash"])
+        && request.resource.data.verdict in ["approved", "rejected"];
+      allow delete: if false;
+    }
+
+    match /disputes/{disputeId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.raisedBy;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

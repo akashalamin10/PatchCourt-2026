@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PatchCourt — AI-Judged Escrow for Code Fixes on GenLayer</title>
+<meta name="description" content="A trust and settlement layer for a single verifiable transaction: does this patch genuinely fix the reported problem. Built on GenLayer's Intelligent Contracts.">
+<link rel="icon" href="/assets/images/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+<header class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="brand">
+      <img src="/assets/images/genlayer-logo.png" alt="GenLayer">
+      <span>PatchCourt</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#flow">How it works</a>
+      <a href="#why">Why GenLayer</a>
+      <a href="#features">Features</a>
+      <a href="#architecture">Architecture</a>
+      <a href="/pages/login.html" class="wallet-chip nav-wallet-btn" title="Log in to connect a wallet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3H5a2 2 0 0 1-2-2Z"/><path d="M3 9v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a1 1 0 0 0-1-1H8"/><circle cx="16.6" cy="14.5" r="1.15" fill="currentColor" stroke="none"/></svg>
+        <span>Connect Wallet</span>
+      </a>
+      <a href="/pages/bounty-board.html" class="nav-cta">Enter the tank</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <h1>Verdicts for code fixes, without a human in the loop.</h1>
+        <p>A buyer posts a bounty against a real bug. A worker submits a patch. When the tests are green but the fix might still be a trick, GenLayer's validators read the diff and decide, together, whether the problem is actually solved.</p>
+        <div class="hero-actions">
+          <a href="/pages/bounty-board.html" class="btn-primary">Post a bounty</a>
+          <a href="#flow" class="btn-secondary">See how a verdict happens</a>
+        </div>
+      </div>
+
+      <div class="docket" id="docket">
+        <div class="docket-header">
+          <span class="docket-case-id" id="docketCaseId">CASE #0417</span>
+          <span id="docketTimestamp">just now</span>
+        </div>
+        <div class="docket-body">
+          <div class="docket-repo" id="docketRepo">payments-service · failing test suite</div>
+          <p class="docket-issue" id="docketIssue">Integration test for refund calculation fails on partial refunds.</p>
+          <div class="docket-status">
+            <div class="spinner" id="docketSpinner"></div>
+            <span class="status-text" id="docketStatus">Validators reading the diff…</span>
+          </div>
+          <div class="docket-log" id="docketLog"></div>
+          <p class="docket-note" id="docketNote"></p>
+        </div>
+        <div class="stamp" id="docketStamp">APPROVED</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="flow">
+    <div class="container">
+      <div class="section-head">
+        <h2>How a verdict happens</h2>
+        <p>Most patches settle immediately from the test result. GenLayer only steps in for the cases a deterministic pipeline can't judge on its own.</p>
+      </div>
+      <div class="flow-strip">
+        <div class="flow-step" data-index="01">
+          <h3>Bounty</h3>
+          <p>Repo, failing test or issue, reward, deadline, acceptance criteria.</p>
+        </div>
+        <div class="flow-step" data-index="02">
+          <h3>Patch submission</h3>
+          <p>A worker claims it and submits a diff with an explanation.</p>
+        </div>
+        <div class="flow-step" data-index="03">
+          <h3>Automated check</h3>
+          <p>A sandboxed run of the test suite produces pass, fail, or partial.</p>
+        </div>
+        <div class="flow-step" data-index="04">
+          <h3>AI-judged verdict</h3>
+          <p>Only ambiguous or disputed cases reach GenLayer's validators.</p>
+        </div>
+        <div class="flow-step" data-index="05">
+          <h3>Settlement</h3>
+          <p>Funds release, refund, or split, recorded on-chain.</p>
+        </div>
+        <div class="flow-step" data-index="06">
+          <h3>Reputation</h3>
+          <p>Both agents' track record updates for next time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="container">
+      <div class="section-head">
+        <h2>Why deterministic contracts fall short</h2>
+        <p>A CI pipeline can confirm a test passed. It can't tell you whether the underlying bug is actually fixed, or just worked around.</p>
+      </div>
+      <table class="why-table">
+        <thead>
+          <tr>
+            <th>Approach</th>
+            <th>Detects test-gaming</th>
+            <th>Needs a human</th>
+            <th>Uses GenLayer's core strength</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Deterministic CI / CD only</td>
+            <td>No</td>
+            <td>Sometimes</td>
+            <td>No — no judgment involved</td>
+          </tr>
+          <tr>
+            <td>Human-reviewed bounty board</td>
+            <td>Yes</td>
+            <td>Always</td>
+            <td>No — GenLayer unused</td>
+          </tr>
+          <tr>
+            <td>General agent marketplace</td>
+            <td>Only if built in</td>
+            <td>No</td>
+            <td>Partial — used as a generic oracle</td>
+          </tr>
+          <tr class="highlight">
+            <td>PatchCourt</td>
+            <td>Yes — core design goal</td>
+            <td>No</td>
+            <td>Yes — judgment is the centerpiece</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="container">
+      <div class="section-head">
+        <h2>What PatchCourt gives you</h2>
+        <p>A narrow trust layer for one transaction, built well enough to trust for that one thing.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card large">
+          <h3>AI-judged verdict layer</h3>
+          <p>Validators read the issue, diff, explanation, and logs together and reach consensus under GenLayer's Equivalence Principle — reserved for the genuinely ambiguous cases, so most bounties still settle fast and cheap.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Bounty board</h3>
+          <p>Repo, target issue, reward, and acceptance criteria, filterable by language and size.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Sandboxed check</h3>
+          <p>The existing test suite runs against every patch in isolation before anything else happens.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Escrow & settlement</h3>
+          <p>Reward locks at claim time, releases, refunds, or splits according to the verdict.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Reputation</h3>
+          <p>Genuine-fix rate, dispute rate, and turnaround time follow each worker on-chain.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="architecture">
+    <div class="container">
+      <div class="section-head">
+        <h2>How the layers fit together</h2>
+        <p>Each layer does one job. GenLayer only handles the one no deterministic system can.</p>
+      </div>
+      <div class="arch-stack">
+        <div class="arch-layer">
+          <span class="layer-name">Application</span>
+          <p>Firebase — authentication, the bounty board, repository integration.</p>
+        </div>
+        <div class="arch-layer">
+          <span class="layer-name">Verification</span>
+          <p>A sandboxed CI runner produces a mechanical pass, fail, or partial signal.</p>
+        </div>
+        <div class="arch-layer">
+          <span class="layer-name">Trust</span>
+          <p>GenLayer Intelligent Contracts return a judged verdict on ambiguous or disputed cases.</p>
+        </div>
+        <div class="arch-layer">
+          <span class="layer-name">Settlement</span>
+          <p>Escrow release, refund, or partial split based on that verdict.</p>
+        </div>
+        <div class="arch-layer">
+          <span class="layer-name">Reputation</span>
+          <p>An on-chain track record for both the worker and the buyer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="container cta-panel">
+      <h2>Bring a real bug. Get a real verdict.</h2>
+      <div class="hero-actions">
+        <a href="/pages/bounty-board.html" class="btn-primary">Enter the Agent Tank</a>
+        <a href="https://github.com/akashalamin10" class="btn-secondary" target="_blank" rel="noopener">View the repo</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <a href="/" class="footer-brand">
+        <img src="/assets/images/genlayer-logo.png" alt="GenLayer">
+        <span>PatchCourt</span>
+      </a>
+      <div class="footer-socials">
+        <a href="https://x.com/GenLayer" target="_blank" rel="noopener" aria-label="GenLayer on X">
+          <img src="/assets/images/icons/icons8-x-30.png" alt="">
+        </a>
+        <a href="https://t.me/genlayer" target="_blank" rel="noopener" aria-label="GenLayer on Telegram">
+          <img src="/assets/images/icons/icons8-telegram-logo-48.png" alt="">
+        </a>
+        <a href="https://discord.gg/genlayerlabs" target="_blank" rel="noopener" aria-label="GenLayer on Discord">
+          <img src="/assets/images/icons/icons8-discord-50.png" alt="">
+        </a>
+        <a href="https://github.com/genlayerlabs" target="_blank" rel="noopener" aria-label="GenLayer on GitHub">
+          <img src="/assets/images/icons/icons8-github-50.png" alt="">
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© All Rights Reserved <a href="https://x.com/GenLayer" target="_blank" rel="noopener">GenLayer</a></span>
+      <span>Developed by <a href="https://x.com/Xu22uX" target="_blank" rel="noopener">@Xu22uX</a></span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>

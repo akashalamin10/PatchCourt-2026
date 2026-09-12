@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — PatchCourt</title>
+<link rel="icon" href="/assets/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+  <div class="page-spinner-overlay" id="initialSpinner">
+    <div class="page-spinner-box">
+      <span class="cyber-spinner cyber-spinner-lg">
+        <svg viewBox="0 0 60 60" class="cyber-spinner-svg">
+          <polygon points="30,4 52,17 52,43 30,56 8,43 8,17" class="cs-hex" />
+          <circle cx="30" cy="30" r="18" class="cs-arc cs-arc-1" />
+          <circle cx="30" cy="30" r="12" class="cs-arc cs-arc-2" />
+          <circle cx="30" cy="30" r="2.4" class="cs-core" />
+        </svg>
+      </span>
+      <span class="page-spinner-label mono">Connecting to PatchCourt...</span>
+    </div>
+  </div>
+
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <a href="/" class="sidebar-brand">
+      <img src="/assets/images/genlayer-logo.jpg" alt="GenLayer">
+      <span>PatchCourt</span>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="/pages/dashboard.html" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="/pages/bounty-board.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+        <span>Bounty board</span>
+      </a>
+      <a href="/pages/submit-patch.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <span>My submissions</span>
+      </a>
+      <a href="/pages/dispute.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M5 7l-3 6a4 4 0 0 0 6 0zM19 7l-3 6a4 4 0 0 0 6 0zM5 7h14"/></svg>
+        <span>Disputes</span>
+      </a>
+      <a href="/pages/profile.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+        <span>Profile</span>
+      </a>
+    </nav>
+    <a href="#" class="sidebar-link sidebar-logout" id="logoutBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span>Log out</span>
+    </a>
+
+    <div class="sidebar-social">
+      <a href="#" target="_blank" rel="noopener" title="X / Twitter" aria-label="X / Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-7l-5.5-7.2L4.5 22H1.4l8.2-9.3L1 2h7.2l5 6.6L18.9 2Zm-1.2 18h1.7L7.4 3.9H5.6L17.7 20Z"/></svg></a>
+      <a href="#" target="_blank" rel="noopener" title="Telegram" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.3-1.8.8l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9L18.3 6.7c.5-.4-.1-.6-.7-.2L6.6 13.4 1.8 12c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3Z"/></svg></a>
+      <a href="#" target="_blank" rel="noopener" title="Discord" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 5.4A18.3 18.3 0 0 0 15.9 4l-.3.6a13 13 0 0 1 3.9 1.5 15.8 15.8 0 0 0-13 0A13 13 0 0 1 10.4 4l-.3-.6a18.3 18.3 0 0 0-4.4 1.4C2.7 9.3 2 13 2.3 16.7A18.5 18.5 0 0 0 7.9 19l.7-1.2a12 12 0 0 1-2-1c.2-.1.3-.2.5-.3a13.3 13.3 0 0 0 11.6 0l.5.3a12 12 0 0 1-2 1l.7 1.2a18.4 18.4 0 0 0 5.6-2.3c.4-4.3-.6-8-2.6-11.3ZM9 14.6c-.9 0-1.6-.8-1.6-1.8S8 11 9 11s1.7.9 1.6 1.8c0 1-.7 1.8-1.6 1.8Zm6 0c-.9 0-1.6-.8-1.6-1.8S14 11 15 11s1.7.9 1.6 1.8c0 1-.7 1.8-1.6 1.8Z"/></svg></a>
+    </div>
+  </aside>
+
+  <div>
+    <header class="topbar">
+      <h1>Dashboard <span class="role-badge" id="roleBadge">—</span></h1>
+      <div class="user-chip">
+        <span id="walletChipContainer"></span>
+        <span id="userName">—</span>
+        <div class="avatar" id="userAvatar">?</div>
+      </div>
+    </header>
+
+    <main class="content-area">
+
+      <div class="stat-grid" id="statGrid">
+        <div class="stat-card">
+          <div class="stat-value skeleton-bar" style="width:40px;height:26px;"></div>
+          <div class="stat-label">Loading</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value skeleton-bar" style="width:40px;height:26px;"></div>
+          <div class="stat-label">Loading</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value skeleton-bar" style="width:40px;height:26px;"></div>
+          <div class="stat-label">Loading</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value skeleton-bar" style="width:40px;height:26px;"></div>
+          <div class="stat-label">Loading</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <h2 id="tablePanelTitle">Your bounties</h2>
+            <a href="#" class="btn-secondary" id="primaryActionBtn" style="padding:8px 16px;font-size:0.85rem;">Post a bounty</a>
+          </div>
+          <table class="data-table" id="bountyTable">
+            <thead>
+              <tr>
+                <th>Case</th>
+                <th>Repo</th>
+                <th>Reward</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="bountyTableBody">
+              <tr class="skeleton-row"><td><div class="skeleton-bar"></div></td><td><div class="skeleton-bar"></div></td><td><div class="skeleton-bar"></div></td><td><div class="skeleton-bar"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Reputation</h2>
+          </div>
+          <div class="rep-item">
+            <span>Genuine-fix rate</span>
+            <span class="rep-value" id="repFixRate">—</span>
+          </div>
+          <div class="rep-item">
+            <span>Dispute rate</span>
+            <span class="rep-value" id="repDisputeRate">—</span>
+          </div>
+          <div class="rep-item">
+            <span>Avg turnaround</span>
+            <span class="rep-value" id="repTurnaround">—</span>
+          </div>
+          <div class="quick-links">
+            <a href="/pages/bounty-board.html" class="btn-secondary" style="text-align:center;">Browse open bounties</a>
+            <a href="/pages/dispute.html" class="btn-secondary" style="text-align:center;">View disputes</a>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</div>
+
+<script type="module" src="/js/pages/dashboard.js"></script>
+</body>
+</html>
