@@ -48,7 +48,7 @@ ${pageFooter()}
 await wireChrome();
 requireContract();
 
-const POLL_MS = 45000 + Math.floor(Math.random() * 5000);
+const POLL_MS = 120000 + Math.floor(Math.random() * 10000);
 
 function caseCard(id, bounty) {
   return `
@@ -118,7 +118,7 @@ async function fetchDashboard(account) {
   return { posted, claimed, credit };
 }
 
-async function load({ silent = false } = {}) {
+async function load({ silent = false, force = false } = {}) {
   const account = await getAccount();
   if (!account) {
     renderEmpty();
@@ -129,9 +129,10 @@ async function load({ silent = false } = {}) {
 
   const cacheKey = `dashboard:${(getContractAddress() || "unset").toLowerCase()}:${account.toLowerCase()}`;
   const cached = cacheGet(cacheKey);
+  const hasUsableCache = Boolean(cached?.value);
 
   if (!silent) {
-    if (cached?.value) {
+    if (hasUsableCache) {
       lastRendered = cached.value;
       renderData(cached.value);
       setLastUpdated(cached.ts);
@@ -140,15 +141,27 @@ async function load({ silent = false } = {}) {
       pageLoader(document.getElementById("postedGrid"), "Reading your cases\u2026");
       document.getElementById("claimedGrid").innerHTML = "";
     }
-    showBusy("Loading your cases\u2026");
   }
+
+  // Skip re-reading the whole contract when this wallet's cache is still
+  // fresh (< 20s old). "Refresh" (force) and an account switch always go
+  // through; a background poll is normally already past that window anyway.
+  if (!force && hasUsableCache && !cached.stale) {
+    return;
+  }
+
+  if (!silent) showBusy("Loading your cases\u2026");
 
   try {
     if (!loadInFlight) {
       loadInFlight = (async () => {
         const fresh = await fetchDashboard(account);
-        lastRendered = fresh;
-        renderData(fresh);
+        // Nothing actually changed since the last render -- skip rebuilding
+        // the cards/stats so the page doesn't flicker on every background poll.
+        if (!sameJSON(fresh, lastRendered)) {
+          lastRendered = fresh;
+          renderData(fresh);
+        }
         cacheSet(cacheKey, fresh);
         setLastUpdated(Date.now());
         return fresh;
@@ -164,13 +177,13 @@ async function load({ silent = false } = {}) {
   }
 }
 
-document.getElementById("refreshBtn").addEventListener("click", () => load({ silent: false }));
+document.getElementById("refreshBtn").addEventListener("click", () => load({ silent: false, force: true }));
 document.getElementById("withdrawBtn").addEventListener("click", () => {
   toast("Withdraw isn't live yet. The deployed contract doesn't lock real GEN as escrow, but credit is tracked correctly on-chain and ready to pay out once the payable upgrade ships.", "info");
 });
 
 await load();
-onAccountsChanged(() => load());
+onAccountsChanged(() => load({ force: true }));
 
 let pollTimer = null;
 function startPolling() {

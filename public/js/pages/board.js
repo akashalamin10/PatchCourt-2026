@@ -30,7 +30,7 @@ function cacheKey() {
   return `board:${(getContractAddress() || "unset").toLowerCase()}`;
 }
 
-const POLL_MS = 45000 + Math.floor(Math.random() * 5000);
+const POLL_MS = 120000 + Math.floor(Math.random() * 10000);
 
 function renderCards(grid, cards) {
   if (!cards.length) {
@@ -100,7 +100,7 @@ async function fetchCards() {
   return cards;
 }
 
-async function load({ silent = false } = {}) {
+async function load({ silent = false, force = false } = {}) {
   const grid = document.getElementById("grid");
   const key = cacheKey();
   const cached = cacheGet(key);
@@ -117,15 +117,29 @@ async function load({ silent = false } = {}) {
       lastRenderedCards = null;
       pageLoader(grid, "Loading every bounty on this contract\u2026");
     }
-    showBusy("Loading bounty list\u2026");
   }
+
+  // Skip re-reading the whole contract when the cache is still fresh
+  // (< 20s old) -- e.g. clicking back into this page seconds after leaving
+  // it. "Reload from chain" (force) always goes through; a background poll
+  // is normally already past that freshness window anyway.
+  if (!force && hasUsableCache && !cached.stale) {
+    return;
+  }
+
+  if (!silent) showBusy("Loading bounty list\u2026");
 
   try {
     if (!loadInFlight) {
       loadInFlight = (async () => {
         const cards = await fetchCards();
-        lastRenderedCards = cards;
-        renderCards(grid, cards);
+        // Nothing actually changed on-chain since the last render -- skip
+        // the full-grid rebuild so an open row/scroll position doesn't jump
+        // on every background poll.
+        if (!sameJSON(cards, lastRenderedCards)) {
+          lastRenderedCards = cards;
+          renderCards(grid, cards);
+        }
         cacheSet(key, cards);
         setLastUpdated(Date.now());
         return cards;
@@ -144,7 +158,7 @@ async function load({ silent = false } = {}) {
   }
 }
 
-document.getElementById("refreshBtn").addEventListener("click", () => load({ silent: false }));
+document.getElementById("refreshBtn").addEventListener("click", () => load({ silent: false, force: true }));
 await load();
 
 let pollTimer = null;

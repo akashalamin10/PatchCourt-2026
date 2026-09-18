@@ -149,6 +149,12 @@ export function disconnectWallet() {
   saveWalletId("");
   localStorage.setItem(DISCONNECTED_KEY, "1");
   window.dispatchEvent(new CustomEvent("patchcourt:walletDisconnected"));
+  // Also fire this: pages like the dashboard don't listen for
+  // "walletDisconnected" directly, only for "accountsChanged" (via
+  // onAccountsChanged). Without this, clicking Disconnect updates the
+  // header button but leaves the previous wallet's data sitting on screen
+  // until the next poll or a manual refresh.
+  window.dispatchEvent(new CustomEvent("patchcourt:accountsChanged", { detail: "" }));
   if (provider?.disconnect) {
     try {
       provider.disconnect();
