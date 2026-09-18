@@ -164,6 +164,14 @@ function finalizeConnection(provider, name, walletId, address) {
   localStorage.removeItem(DISCONNECTED_KEY);
   saveAccount(address);
   saveWalletId(walletId);
+  // Fire this ourselves rather than relying on the provider's own
+  // "accountsChanged" event: wallets like MetaMask only emit that when the
+  // authorized account actually changes from their point of view. If the
+  // user disconnected inside PatchCourt (our own local flag) and then
+  // reconnects the same already-authorized account, nothing changes on the
+  // wallet's side, so it stays silent -- and pages listening for this event
+  // (like the dashboard) would otherwise never know a connection completed.
+  window.dispatchEvent(new CustomEvent("patchcourt:accountsChanged", { detail: address }));
 }
 
 // IMPORTANT ORDER: request accounts (the actual "turn the wallet on" step)
@@ -361,6 +369,7 @@ export async function switchAccount() {
   if (!address) throw new Error("No account selected.");
   localStorage.removeItem(DISCONNECTED_KEY);
   saveAccount(address);
+  window.dispatchEvent(new CustomEvent("patchcourt:accountsChanged", { detail: address }));
   return address;
 }
 

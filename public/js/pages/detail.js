@@ -1,6 +1,6 @@
 import { explorerTx } from "../config.js";
 import { getBounty, writeContract } from "../genlayer-client.js";
-import { shortAddr } from "../wallet.js";
+import { shortAddr, getAccount, sameAddress, onAccountsChanged } from "../wallet.js";
 import { pageShell, pageFooter, wireChrome, toast, statusClass, rememberBountyId, loadLocalBountyIds, withSpinner, pageLoader, escapeHtml, requireWallet, requireContract, showBusy, hideBusy } from "../ui.js";
 import { flashReward, playVerdict, openModal } from "../fx.js";
 
@@ -17,6 +17,7 @@ function readBountyId() {
 
 const arrivedWithId = Boolean(readBountyId());
 let bountyId = readBountyId();
+let currentAccount = "";
 
 document.getElementById("app").innerHTML = `
 ${pageShell({ active: "board" })}
@@ -87,16 +88,26 @@ function renderStepper(bounty) {
   const claimAction = status === "open" ? `<button class="btn-primary" id="claimBtn" type="button">Claim bounty</button>` : "";
 
   const patchState = status === "open" ? "locked" : hasPatch ? "done" : "active";
-  const patchNote =
-    status === "open"
-      ? "Unlocks once the bounty is claimed."
-      : hasPatch
-        ? "Patch, explanation, and test log are stored on-chain."
+  const isWorker = Boolean(currentAccount) && sameAddress(bounty.worker, currentAccount);
+  const isFinal = status === "settled" || status === "rejected";
+  // Only the assigned worker can actually submit here -- the contract
+  // rejects anyone else's transaction -- and once a verdict is in, patching
+  // again would only be reachable through "Raise dispute" first, not a
+  // plain resubmit. Showing the button to everyone at every status just
+  // invites failed transactions and makes a finished case look reopenable.
+  const canAct = isWorker && !isFinal;
+  const patchNote = status === "open"
+    ? "Unlocks once the bounty is claimed."
+    : hasPatch
+      ? isFinal
+        ? "Patch, explanation, and test log are stored on-chain (see below). This case already has a verdict."
+        : "Patch, explanation, and test log are stored on-chain (see below)."
+      : isWorker
+        ? "Submit your patch below."
         : "Only the assigned worker can submit here.";
-  const patchAction =
-    status === "open"
-      ? ""
-      : `<a class="btn-secondary" href="/pages/submit-patch.html?id=${encodeURIComponent(bountyId)}">${hasPatch ? "View / resubmit" : "Submit patch"}</a>`;
+  const patchAction = canAct
+    ? `<a class="btn-secondary" href="/pages/submit-patch.html?id=${encodeURIComponent(bountyId)}">${hasPatch ? "Resubmit patch" : "Submit patch"}</a>`
+    : "";
 
   const judgeState = !hasPatch ? "locked" : hasVerdict ? "done" : "active";
   const judgeNote = !hasPatch
@@ -190,7 +201,7 @@ async function render() {
     ${
       bounty.diff_text
         ? `
-    <details>
+    <details open>
       <summary>Patch, explanation, and test log</summary>
       ${bounty.gaming_flag ? `<div class="alert warn" style="margin-bottom:0.75rem">Automated screening flagged a possible test-weakening pattern in this diff. Validators were told to check it closely.</div>` : ""}
       <pre>${escapeHtml(bounty.explanation)}</pre>
@@ -235,6 +246,17 @@ document.getElementById("disputeBtn").addEventListener("click", () => {
       });
     },
   });
+});
+
+currentAccount = await getAccount();
+onAccountsChanged(async () => {
+  currentAccount = await getAccount();
+  if (!bountyId) return;
+  try {
+    await render();
+  } catch {
+    /* ignore -- initial load below already surfaces load errors */
+  }
 });
 
 try {
