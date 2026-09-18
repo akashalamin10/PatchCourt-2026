@@ -1,5 +1,5 @@
 import { NETWORK, SDK, getContractAddress } from "./config.js";
-import { showBusy, hideBusy } from "./ui.js";
+import { showBusy, hideBusy, setBusyMessage } from "./ui.js";
 
 let sdk = null;
 let chains = null;
@@ -222,10 +222,10 @@ export async function writeContract(functionName, args, account, value) {
     const address = requireContract();
     const write = { address, functionName, args };
     if (value != null) write.value = BigInt(value);
-    showBusy("Confirm the transaction in your wallet\u2026");
+    setBusyMessage("Confirm the transaction in your wallet\u2026");
     const withFees = await attachFees(client, write);
     const hash = await client.writeContract(withFees);
-    showBusy("Waiting for the transaction to finalize\u2026");
+    setBusyMessage("Waiting for the transaction to finalize\u2026");
     const receipt = await waitForTx(client, hash);
     return { hash, receipt };
   } finally {

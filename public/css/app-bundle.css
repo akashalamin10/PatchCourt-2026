@@ -676,12 +676,6 @@ textarea { resize: vertical; font-family: var(--font-mono); font-size: 0.85rem; 
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  padding: 1.6rem 1.8rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-lg);
-  background: var(--panel-2, rgba(4, 10, 22, 0.92));
-  box-shadow: var(--shadow-panel);
-  min-width: 220px;
 }
 .busy-msg {
   color: var(--ink);

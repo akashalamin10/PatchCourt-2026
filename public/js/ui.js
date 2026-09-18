@@ -277,6 +277,19 @@ export function hideBusy() {
   document.body.classList.remove("is-busy");
 }
 
+// Updates the message on an already-open overlay without touching busyCount.
+// Use this for multi-step operations (e.g. wallet confirm -> finalize) that
+// call showBusy() once and just need the label to change as they progress.
+// Calling showBusy() again for the same logical operation increments the
+// counter a second time, and since finally-blocks only call hideBusy() once,
+// the overlay gets stuck open (only a full refresh resets the counter).
+export function setBusyMessage(message) {
+  const overlay = document.getElementById("busyOverlay");
+  if (!overlay) return;
+  const msg = overlay.querySelector("#busyMsg");
+  if (msg) msg.textContent = message;
+}
+
 export async function withBusy(message, task) {
   showBusy(message);
   try {
