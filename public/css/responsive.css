@@ -1,0 +1,50 @@
+@media (max-width: 1024px) {
+  .hero-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 860px) {
+  .nav-toggle { display: flex; }
+  .nav-links {
+    position: fixed;
+    top: 64px;
+    left: 0; right: 0;
+    background: rgba(1, 5, 14, 0.97);
+    border-bottom: 1px solid var(--line);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.5rem var(--edge) 1rem;
+    display: none;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    z-index: 45;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a:not(.wallet-chip):not(.nav-cta) { padding: 0.75rem 0; border-bottom: 1px solid var(--line); }
+  .nav-links .wallet-menu-wrap, .nav-links .nav-cta { margin-top: 0.75rem; }
+  .wallet-menu { right: auto; left: 0; max-width: min(280px, calc(100vw - 2rem)); }
+  .step-row { grid-template-columns: 30px 1fr; }
+  .step-row > div:last-child { grid-column: 1 / -1; }
+  .net-banner { font-size: 0.65rem; }
+}
+
+@media (max-width: 720px) {
+  .bounty-table { display: none; }
+  .bounty-table-wrap { border: 0; background: transparent; }
+  .bounty-cards { display: grid; grid-template-columns: 1fr; gap: var(--gap); }
+  .hero-actions .btn-primary,
+  .hero-actions .btn-secondary { width: 100%; }
+}
+
+@media (max-width: 560px) {
+  .navbar-inner { height: 56px; }
+  .nav-links { top: 56px; }
+  .brand span { font-size: 0.92rem; letter-spacing: 1px; }
+  .brand-logo { width: 34px; height: 34px; }
+  .docket-header { flex-direction: column; gap: 0.25rem; }
+  .stamp { font-size: 0.85rem; padding: 0.25rem 0.6rem; top: 1rem; right: 1rem; }
+  .card-grid { grid-template-columns: 1fr; }
+  .modal-panel, .chg-panel { width: min(100vw - 1.2rem, 520px); }
+  footer { padding: 1.5rem var(--edge) 1.25rem; }
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+}

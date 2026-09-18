@@ -1,0 +1,17 @@
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px var(--ruling); }
+  50% { opacity: 0.3; transform: scale(1.45); box-shadow: 0 0 2px var(--ruling); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeUp 0.5s var(--ease) both; }
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}

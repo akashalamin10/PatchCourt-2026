@@ -1,0 +1,57 @@
+:root {
+  /* -- surfaces -- */
+  --bg: #020408;
+  --bg-raised: #040e1e;
+  --panel: rgba(2, 12, 32, 0.92);
+  --panel-2: rgba(4, 14, 30, 0.96);
+  --line: rgba(0, 180, 255, 0.13);
+  --line-strong: rgba(0, 200, 255, 0.28);
+  --border: rgba(0, 180, 255, 0.13);
+
+  /* -- ink -- */
+  --ink: #c8e8ff;
+  --ink-dim: rgba(200, 232, 255, 0.62);
+  --ink-faint: rgba(200, 232, 255, 0.42);
+
+  /* -- signal colors -- */
+  --evidence: #00c8ff;
+  --evidence-dim: rgba(0, 200, 255, 0.12);
+  --ruling: #a0ff60;
+  --ruling-dim: rgba(160, 255, 96, 0.12);
+  --caution: #ffb830;
+  --caution-dim: rgba(255, 184, 48, 0.12);
+  --reject: #ff5d6c;
+  --reject-dim: rgba(255, 93, 108, 0.12);
+  --worker: #c060ff;
+  --brand: #e1306c;
+  --brand-2: #833ab4;
+  --heat: #ff6b35;
+
+  /* -- type -- */
+  --font-display: "Orbitron", "Segoe UI", sans-serif;
+  --font-body: "Rajdhani", "Segoe UI", sans-serif;
+  --font-mono: "Share Tech Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* -- scale -- */
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.86rem);
+  --step-0: clamp(0.95rem, 0.92rem + 0.15vw, 1rem);
+  --step-1: clamp(1.15rem, 1.1rem + 0.25vw, 1.3rem);
+  --step-2: clamp(1.4rem, 1.3rem + 0.5vw, 1.7rem);
+  --step-3: clamp(1.8rem, 1.6rem + 1vw, 2.4rem);
+  --step-4: clamp(2.3rem, 1.9rem + 2vw, 3.4rem);
+  --step-5: clamp(2.8rem, 2.2rem + 3vw, 4.6rem);
+
+  /* -- rhythm -- */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --gap: clamp(1rem, 0.9rem + 0.5vw, 1.5rem);
+  --edge: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+
+  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 20px 40px -24px rgba(0, 0, 0, 0.7);
+  --glow-evidence: 0 0 0 1px rgba(0, 200, 255, 0.3), 0 0 24px -6px rgba(0, 200, 255, 0.5);
+  --glow-ruling: 0 0 0 1px rgba(160, 255, 96, 0.3), 0 0 24px -6px rgba(160, 255, 96, 0.45);
+  --glow-reject: 0 0 0 1px rgba(255, 93, 108, 0.3), 0 0 24px -6px rgba(255, 93, 108, 0.45);
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

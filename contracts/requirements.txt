@@ -1,0 +1,3 @@
+# Local test-only dependency. The contract itself runs on the GenLayer
+# runtime pinned by the Depends line in patch_court_contract.py.
+pytest>=7.0

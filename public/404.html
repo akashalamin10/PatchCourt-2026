@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 — PatchCourt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="/assets/images/logo.png">
+<style>
+  :root { --a:#00c8ff; --bg:#020408; --txt:#c8e8ff; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh;
+    background: radial-gradient(ellipse at 30% 40%, #040e1e 0%, #010204 72%);
+    color: var(--txt);
+    font-family: Rajdhani, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    max-width: 420px; width: 100%;
+    background: rgba(2,12,32,0.92);
+    border: 1px solid rgba(0,180,255,0.2);
+    border-radius: 14px;
+    padding: 32px 28px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,200,255,0.12);
+  }
+  img { width: 72px; height: 72px; object-fit: contain; margin: 0 auto 12px; display: block; }
+  h1 { font-family: Orbitron, sans-serif; letter-spacing: 3px; color: var(--a); margin: 0 0 8px; }
+  p { color: rgba(200,232,255,0.62); }
+  a {
+    display: inline-block; margin-top: 12px;
+    font-family: Orbitron, sans-serif; font-size: 12px; letter-spacing: 1.5px;
+    color: #00131a; background: var(--a); text-decoration: none;
+    padding: 12px 18px; border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img src="/assets/images/logo.png" alt="PatchCourt">
+    <h1>404</h1>
+    <p>This route is not on the docket. Use the full page path (with .html) or return to the board.</p>
+    <a href="/pages/bounty-board.html">BACK TO THE BOARD</a>
+    <a href="/pages/dashboard.html" style="margin-left:8px;background:transparent;color:#00c8ff;border:1px solid rgba(0,200,255,0.4)">DASHBOARD</a>
+  </div>
+</body>
+</html>

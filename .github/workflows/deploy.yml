@@ -1,0 +1,20 @@
+name: PatchCourt CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  test-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r contracts/requirements.txt
+      - run: python3 -m pytest contracts/tests/ -q
+  lint-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node --check public/js/ui.js public/js/wallet.js public/js/genlayer-client.js public/js/main.js

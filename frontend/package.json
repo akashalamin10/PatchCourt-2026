@@ -1,0 +1,9 @@
+{
+  "name": "patchcourt-frontend-sdk",
+  "private": true,
+  "description": "Pinned Consensus v0.6 RC package versions for PatchCourt. The live UI in /public loads genlayer-js from esm.sh directly \u2014 this manifest exists to lock and document the exact RC line, per the migration checklist.",
+  "dependencies": {
+    "genlayer-js": "2.0.0-rc.1",
+    "@genlayer/transaction-kit": "0.1.0-rc.2"
+  }
+}

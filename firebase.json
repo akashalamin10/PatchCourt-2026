@@ -1,0 +1,99 @@
+{
+  "hosting": {
+    "public": "public",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/dashboard",
+        "destination": "/pages/dashboard.html",
+        "type": 301
+      },
+      {
+        "source": "/dashboard.html",
+        "destination": "/pages/dashboard.html",
+        "type": 301
+      },
+      {
+        "source": "/board",
+        "destination": "/pages/bounty-board.html",
+        "type": 301
+      },
+      {
+        "source": "/post",
+        "destination": "/pages/post-bounty.html",
+        "type": 301
+      },
+      {
+        "source": "/setup",
+        "destination": "/pages/setup.html",
+        "type": 301
+      },
+      {
+        "source": "/verify",
+        "destination": "/pages/verify.html",
+        "type": 301
+      },
+      {
+        "source": "/case",
+        "destination": "/pages/bounty-detail.html",
+        "type": 301
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/pages/dashboard",
+        "destination": "/pages/dashboard.html"
+      },
+      {
+        "source": "/pages/bounty-board",
+        "destination": "/pages/bounty-board.html"
+      },
+      {
+        "source": "/pages/post-bounty",
+        "destination": "/pages/post-bounty.html"
+      },
+      {
+        "source": "/pages/bounty-detail",
+        "destination": "/pages/bounty-detail.html"
+      },
+      {
+        "source": "/pages/submit-patch",
+        "destination": "/pages/submit-patch.html"
+      },
+      {
+        "source": "/pages/setup",
+        "destination": "/pages/setup.html"
+      },
+      {
+        "source": "/pages/verify",
+        "destination": "/pages/verify.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(css|js)",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+        ]
+      },
+      {
+        "source": "**/*.@(png|jpg|jpeg|webp|svg)",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=86400" }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      }
+    ]
+  }
+}
