@@ -39,15 +39,8 @@ export const APP_METADATA = {
   },
 };
 
-// Default deployed contract address for this app. Used whenever nothing is
-// saved yet in this browser's local storage (see setContractAddress below).
-// Confirmed working deployment: 5/5 transactions FINALIZED/SUCCESS,
-// submit_verdict reached APPROVED through real validator consensus.
-// See explorer-studio-next.genlayer.com/address/<this address>.
-// Latest deploy of this frontend. If the board looks empty, paste the
-// previously working address on Setup instead:
-//   0x40DA7abd05aAd504Ca9D2Ae95b33C1E1c318e67e
-const DEFAULT_CONTRACT_ADDRESS = "0x0a68B19DAfA0789da80e77E15e9FB407d6C7b4C7";
+
+const DEFAULT_CONTRACT_ADDRESS = "0x591c5abb616De598293EB1C84F923aFc886DdDCF";
 
 const ZERO = "0x0000000000000000000000000000000000000000";
 const STORAGE_KEY = "patchcourt.contractAddress";
