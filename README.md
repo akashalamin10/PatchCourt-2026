@@ -61,7 +61,6 @@ post_bounty(bounty_id, repo_url, issue_description, reward, acceptance_criteria)
 claim_bounty(bounty_id)
 submit_patch(bounty_id, diff_text, explanation, test_log)
 submit_verdict(bounty_id)          -> validator consensus decides the verdict
-raise_dispute(bounty_id, notes)
 withdraw()                         -> pays out settled credit
 
 get_bounty(bounty_id) / list_bounty_ids() / get_credit(address) / get_owner()   [views]
@@ -102,9 +101,9 @@ cd contracts && python -m pytest tests/ -q
 |---|---|
 | Calls a real GenLayer contract | Every action is a wallet-signed write to `patch_court_contract.py` on Studio Next. No mock mode |
 | Why decentralized judgment matters | See above — a green test isn't a fixed bug, and neither party can be trusted to make that call |
-| Meaningful state, meaningful validator check | Full case lifecycle persists on-chain (escrow, diff, verdict, dispute, credit). Validators judge the actual diff against the acceptance criteria, not just whether tests pass |
+| Meaningful state, meaningful validator check | Full case lifecycle persists on-chain (escrow, diff, verdict, credit). Validators judge the actual diff against the acceptance criteria, not just whether tests pass |
 | Repo builds and works | Static frontend, no build step. Contract syntax-checked, 11 logic tests passing |
-| Beyond the boilerplate | Own contract, own escrow/settlement model, own anti-test-gaming screen, dispute path, 8-page frontend, drift-guard tests |
+| Beyond the boilerplate | Own contract, own escrow/settlement model, own anti-test-gaming screen, 8-page frontend, drift-guard tests |
 | Someone can verify the result | The **How to verify** page walks a reviewer through checking a real verdict on the explorer, including how to reproduce a rejection |
 
 ## Known limits, stated honestly

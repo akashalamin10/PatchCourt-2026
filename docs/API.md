@@ -27,7 +27,6 @@
 - `claim_bounty(bounty_id)` — caller becomes the worker; buyer cannot claim their own bounty
 - `submit_patch(bounty_id, diff_text, explanation, test_log)` — worker only
 - `submit_verdict(bounty_id)` — runs the AI judge across validators (Equivalence Principle), settles or rejects, credits the escrow split
-- `raise_dispute(bounty_id, notes)` — buyer or worker only, on a settled/rejected case
 - `withdraw()` — pays out the caller's accumulated credit balance
 - `get_bounty(bounty_id)` — view, returns the bounty record as JSON
 - `list_bounty_ids()` — view, returns all bounty ids as a JSON array

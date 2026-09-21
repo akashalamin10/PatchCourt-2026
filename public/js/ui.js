@@ -214,7 +214,7 @@ export function statusClass(status) {
   const value = String(status || "").toLowerCase();
   if (value.includes("settle") || value === "approved") return "pill ok";
   if (value.includes("reject")) return "pill bad";
-  if (value.includes("partial") || value.includes("review") || value.includes("dispute") || value.includes("claim")) return "pill warn";
+  if (value.includes("partial") || value.includes("review") || value.includes("claim")) return "pill warn";
   return "pill";
 }
 

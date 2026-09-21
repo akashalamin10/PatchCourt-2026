@@ -50,7 +50,7 @@ async function restoreState(id) {
     const bounty = await getBounty(id);
     if (!bounty) return;
     const hasPatch = Boolean(bounty.diff_text);
-    const hasVerdict = Boolean(bounty.verdict) && bounty.status !== "disputed";
+    const hasVerdict = Boolean(bounty.verdict);
     if (hasVerdict) {
       showVerdict(id, bounty.verdict);
     } else if (hasPatch) {
@@ -80,7 +80,7 @@ document.getElementById("patchForm").addEventListener("submit", async (event) =>
         return;
       }
       if (existing && (existing.status === "settled" || existing.status === "rejected")) {
-        toast("This case already has a verdict. Raise a dispute from the case docket to revise it.", "err");
+        toast("This case already has a final verdict.", "err");
         return;
       }
       toast("Confirm submit_patch\u2026");
@@ -123,7 +123,7 @@ function renderJudgeStep(id) {
         // Defensive re-check: someone else may have already judged this case
         // while the button sat on screen (e.g. a stale tab left open).
         const existing = await getBounty(id);
-        if (existing?.verdict && existing.status !== "disputed") {
+        if (existing?.verdict) {
           showVerdict(id, existing.verdict);
           toast("This case already has a verdict.", "ok");
           return;

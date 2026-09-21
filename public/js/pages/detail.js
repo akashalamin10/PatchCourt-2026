@@ -2,7 +2,7 @@ import { explorerTx } from "../config.js";
 import { getBounty, writeContract } from "../genlayer-client.js";
 import { shortAddr, getAccount, sameAddress, onAccountsChanged } from "../wallet.js";
 import { pageShell, pageFooter, wireChrome, toast, statusClass, rememberBountyId, loadLocalBountyIds, withSpinner, pageLoader, escapeHtml, requireWallet, requireContract, showBusy, hideBusy } from "../ui.js";
-import { flashReward, playVerdict, openModal } from "../fx.js";
+import { flashReward, playVerdict } from "../fx.js";
 
 function readBountyId() {
   const params = new URLSearchParams(location.search);
@@ -36,10 +36,6 @@ ${pageShell({ active: "board" })}
     </details>
     <div id="docket" class="panel" style="margin-top:1.5rem"></div>
     <div class="stepper" id="stepper"></div>
-    <div class="toolbar wrap" id="disputeRow" style="display:none">
-      <button class="btn-secondary" id="disputeBtn" type="button">Raise dispute</button>
-      <span class="step-note">Only available after a verdict has been written.</span>
-    </div>
     <p id="txOut" class="muted"></p>
   </div>
 </main>
@@ -77,10 +73,9 @@ function stepRow({ num, title, state, note, actionHtml }) {
 
 function renderStepper(bounty) {
   const stepper = document.getElementById("stepper");
-  const disputeRow = document.getElementById("disputeRow");
   const status = bounty.status || "open";
   const hasPatch = Boolean(bounty.diff_text);
-  const hasVerdict = Boolean(bounty.verdict) && status !== "disputed";
+  const hasVerdict = Boolean(bounty.verdict);
 
   const claimState = status === "open" ? "active" : "done";
   const claimNote =
@@ -91,9 +86,8 @@ function renderStepper(bounty) {
   const isWorker = Boolean(currentAccount) && sameAddress(bounty.worker, currentAccount);
   const isFinal = status === "settled" || status === "rejected";
   // Only the assigned worker can actually submit here -- the contract
-  // rejects anyone else's transaction -- and once a verdict is in, patching
-  // again would only be reachable through "Raise dispute" first, not a
-  // plain resubmit. Showing the button to everyone at every status just
+  // rejects anyone else's transaction -- and once a verdict is in, the case
+  // is finished. Showing the button to everyone at every status just
   // invites failed transactions and makes a finished case look reopenable.
   const canAct = isWorker && !isFinal;
   const patchNote = status === "open"
@@ -121,8 +115,6 @@ function renderStepper(bounty) {
     stepRow({ num: 1, title: "Claim bounty", state: claimState, note: claimNote, actionHtml: claimAction }) +
     stepRow({ num: 2, title: "Submit patch", state: patchState, note: patchNote, actionHtml: patchAction }) +
     stepRow({ num: 3, title: "Judge with GenLayer", state: judgeState, note: judgeNote, actionHtml: judgeAction });
-
-  disputeRow.style.display = status === "settled" || status === "rejected" ? "flex" : "none";
 
   document.getElementById("claimBtn")?.addEventListener("click", async (event) => {
     await withSpinner(event.currentTarget, async () => {
@@ -163,11 +155,9 @@ function renderStepper(bounty) {
 async function render() {
   const root = document.getElementById("docket");
   const stepper = document.getElementById("stepper");
-  const disputeRow = document.getElementById("disputeRow");
   if (!bountyId) {
     root.textContent = "Enter a case ID above and click Load case.";
     stepper.innerHTML = "";
-    disputeRow.style.display = "none";
     return;
   }
   pageLoader(root, "Reading on-chain record\u2026");
@@ -181,7 +171,6 @@ async function render() {
   if (!bounty) {
     root.textContent = "The contract returned no record for this ID yet. Wait for consensus, or check the ID.";
     stepper.innerHTML = "";
-    disputeRow.style.display = "none";
     return;
   }
   rememberBountyId(bountyId);
@@ -197,7 +186,6 @@ async function render() {
        worker ${bounty.worker_share_bps || 0} bps \u00b7 buyer refund ${bounty.buyer_refund_bps || 0} bps</p>
     <div class="tbar" title="Worker share"><div class="tbf" style="width:${Math.min(100, Number(bounty.worker_share_bps || 0) / 100)}%;--stat-color:var(--ruling)"></div></div>
     <p class="mono">Buyer ${escapeHtml(shortAddr(bounty.buyer) || "\u2014")} \u00b7 Worker ${escapeHtml(shortAddr(bounty.worker) || "\u2014")}</p>
-    ${bounty.dispute_notes ? `<div class="alert warn">Dispute notes: ${escapeHtml(bounty.dispute_notes)}</div>` : ""}
     ${
       bounty.diff_text
         ? `
@@ -221,31 +209,6 @@ document.getElementById("loadBtn").addEventListener("click", async () => {
   } catch (error) {
     toast(error.message || String(error), "err");
   }
-});
-
-document.getElementById("disputeBtn").addEventListener("click", () => {
-  const button = document.getElementById("disputeBtn");
-  openModal({
-    kicker: "DISPUTE",
-    title: "Raise a dispute",
-    body: "Explain why this verdict should be reviewed. This is written on-chain.",
-    extraHtml: `<label>Notes<textarea id="disputeNotes" rows="4" placeholder="Why dispute this verdict?"></textarea></label>`,
-    confirmLabel: "Submit dispute",
-    onConfirm: async () => {
-      const notes = (document.getElementById("disputeNotes")?.value || "").trim() || "Disagree with verdict";
-      await withSpinner(button, async () => {
-        try {
-          await withWallet(async (account) => {
-            const { hash } = await writeContract("raise_dispute", [bountyId, notes], account);
-            document.getElementById("txOut").innerHTML = `Disputed. <a href="${explorerTx(hash)}" target="_blank" rel="noopener">View on explorer</a>`;
-          });
-          await render();
-        } catch (error) {
-          toast(error.message || String(error), "err");
-        }
-      });
-    },
-  });
 });
 
 currentAccount = await getAccount();

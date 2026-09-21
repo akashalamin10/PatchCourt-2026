@@ -21,7 +21,7 @@ Use this exact case to show why PatchCourt exists.
    match the diff and the root cause is untouched.
 
 5. Verdict: REJECTED. The bounty status flips to `rejected`, the buyer keeps
-   the reward, and the worker's `disputeRate` ticks up in their reputation.
+   the reward.
 
 6. Repeat with a second worker who submits a genuine fix to the refund logic.
    Verdict: APPROVED. Reward settles to the worker, `genuineFixRate` updates.

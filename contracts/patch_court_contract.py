@@ -93,7 +93,6 @@ class PatchCourt(gl.contract.Contract):
             "worker_share_bps": 0,
             "buyer_refund_bps": 10000,
             "credited": False,
-            "dispute_notes": "",
         }
 
     @gl.public.write
@@ -158,7 +157,7 @@ class PatchCourt(gl.contract.Contract):
         data = self._all()
         assert bounty_id in data, "bounty not found"
         record = data[bounty_id]
-        assert record["status"] in ("under_review", "disputed", "claimed"), "nothing to judge"
+        assert record["status"] in ("under_review", "claimed"), "nothing to judge"
         assert len(record.get("diff_text", "")) > 0, "no patch submitted"
         prompt = self._verdict_prompt(record)
 
@@ -198,18 +197,6 @@ class PatchCourt(gl.contract.Contract):
             self._credit(record["buyer"], buyer_amount)
             record["credited"] = True
 
-        self._put(bounty_id, record)
-
-    @gl.public.write
-    def raise_dispute(self, bounty_id: str, notes: str) -> None:
-        data = self._all()
-        assert bounty_id in data, "bounty not found"
-        record = data[bounty_id]
-        sender = self._sender()
-        assert self._norm_addr(sender) in (self._norm_addr(record["buyer"]), self._norm_addr(record["worker"])), "only parties"
-        assert record["status"] in ("settled", "rejected"), "no verdict to dispute"
-        record["status"] = "disputed"
-        record["dispute_notes"] = notes
         self._put(bounty_id, record)
 
     @gl.public.view

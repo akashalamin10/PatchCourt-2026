@@ -17,7 +17,6 @@
 4. Anyone can trigger judgment (`submit_verdict`). GenLayer validators independently run the same prompt against the issue, acceptance criteria, explanation, test log, and diff, and reach consensus on one verdict via the Equivalence Principle.
 5. `APPROVED` settles 100% to the worker, `PARTIAL` splits 70/30, `REJECTED` refunds the buyer in full. The split is credited to each address's balance — no external call happens yet.
 6. Either party can call `withdraw()` at any time afterward to pull their own credited balance.
-7. `raise_dispute` flags a settled/rejected case for a follow-up `submit_verdict` call; it does not re-allocate already-credited funds.
 
 ## State
 

@@ -18,7 +18,6 @@ On-chain methods:
 - `claim_bounty` — a different address takes the case as worker (buyer cannot claim their own bounty)
 - `submit_patch` — worker only; stores diff, explanation, test log
 - `submit_verdict` — validators judge the stored evidence
-- `raise_dispute` — buyer or worker reopens judgment on a settled/rejected case
 - `withdraw` — pays out the caller's credited share
 - `get_bounty` / `list_bounty_ids` / `get_credit` — public reads
 
